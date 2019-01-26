@@ -1,0 +1,1 @@
+Implementation of concurrency constructs from The Art of Multiprocessor Programming by Maurice Herlihy Nir Shavit.
