@@ -1,1 +1,1 @@
-Implementation of concurrency constructs from The Art of Multiprocessor Programming by Maurice Herlihy Nir Shavit in Scala language.
+Implementation of concurrency constructs from [The Art of Multiprocessor Programming by Maurice Herlihy Nir Shavit](https://www.amazon.com/Art-Multiprocessor-Programming-Revised-Reprint/dp/0123973376) in Scala language.
