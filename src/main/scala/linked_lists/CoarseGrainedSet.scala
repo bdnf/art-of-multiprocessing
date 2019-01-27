@@ -2,8 +2,6 @@ package linked_lists
 
 import java.util.concurrent.locks.ReentrantLock
 
-import mutex.BakeryLock
-
 trait Set[T]{
   def add[T](x:T)
   def remove[T](x:T)
@@ -12,25 +10,28 @@ trait Set[T]{
 
 case class Node[T](item: T, key: Int, var next: Node[T])
 
-class CoarseList[T] {
+class CoarseList {
+  //TODO change for generic type T
 
-  val tail = new Node[T](Int(Integer.MIN_VALUE), Integer.MIN_VALUE, null)
-  val head = new Node[T](Int(Integer.MIN_VALUE), Integer.MIN_VALUE, tail)
+  //TODO create sentinel nodes as Empty
 
-  private val lock = new ReentrantLock()
+  val tail: Node[Int] = new Node(Integer.MAX_VALUE, Integer.MAX_VALUE, null)
+  val head: Node[Int] = new Node(Integer.MIN_VALUE, Integer.MIN_VALUE, tail)
 
+  var lock = new ReentrantLock()
 //  def this() = this {
 //
 //  }
 
-  def add[T](item: T): Boolean = {
-    var pred, curr: Node[T] = null
+  def add(item: Int): Boolean = {
+    var pred, curr: Node[Int] = head
     val key = item.hashCode()
     lock.lock()
     try {
 
       pred = head
       curr = pred.next
+
       while( curr.key < key ){
         pred = curr
         curr = curr.next
@@ -38,7 +39,7 @@ class CoarseList[T] {
       if (key == curr.key){
         return false
       } else {
-        val node = new Node(item, key, next = curr)
+        val node = Node(item, key, curr)
         //node.next = curr
         pred.next = node
         return true
@@ -50,9 +51,9 @@ class CoarseList[T] {
 
   }
 
-  def remove[T](item: T): Boolean = {
+  def remove(item: Int): Boolean = {
 
-    var pred, curr: Node[T] = null
+    var pred, curr: Node[Int] = null
     val key = item.hashCode()
     lock.lock()
     try {
@@ -76,6 +77,6 @@ class CoarseList[T] {
 
 
 
-object LinkedListBasedSet extends App {
- 
+object CoarseGrainedSet extends App {
+
 }
