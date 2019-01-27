@@ -1,6 +1,6 @@
 package mutex
 
-trait Lock {
+trait Locked {
   def lock(): Unit
   def unlock(): Unit
 }
@@ -23,25 +23,25 @@ abstract class Counter {
   }
 }
 
-class LockOne extends Lock {
+class LockOne extends Locked {
   //Deadlock may occur
 
   var flag = new Array[Boolean](2)
 
   def lock()= {
-    val i = Thread.currentThread.getId % 2
+    val i = Thread.currentThread.getId.asInstanceOf[Int] % 2
     val j = 1 - i
     flag(i) = true
     while (flag(j)) wait()
   }
 
   def unlock() = {
-    val i = Thread.currentThread.getId % 2
+    val i = Thread.currentThread.getId.asInstanceOf[Int] % 2
     flag(i) = false
   }
 }
 
-class LockTWO extends Lock {
+class LockTWO extends Locked {
   //The LockTwo class is inadequate because it deadlocks if one thread runs completely ahead of the other.
   // Nevertheless, LockTwo has an interesting property: if the threads run concurrently, the lock() method succeeds.
   var victim: Long = 0
@@ -56,12 +56,12 @@ class LockTWO extends Lock {
   }
 }
 
-class Peterson extends Lock {
+class Peterson extends Locked {
   //Starvation-free, Deadlock-free
   //combines LockOne and LockTwo
 
   var flag = new Array[Boolean](2)
-  var victim: Int = 0
+  var victim: Long = 0
   def lock()= {
     val i = Thread.currentThread.getId.asInstanceOf[Int] % 2
     val j = 1 - i
@@ -71,7 +71,7 @@ class Peterson extends Lock {
   }
 
   def unlock() = {
-    val i = Thread.currentThread.getId % 2
+    val i = Thread.currentThread.getId.asInstanceOf[Int] % 2
     flag(i) = false
   }
 }
