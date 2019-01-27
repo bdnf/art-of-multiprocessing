@@ -34,9 +34,10 @@ class LockFreeList {
         curr = pred.next.getReference
         while (true) {
           succ = curr.next.get(marked)
-          while (marked(0)) { // replace curr if marked
+          while (marked(0)) {
+            // replace curr if marked
             snip = pred.next.compareAndSet(curr, succ, false, false)
-            if (!snip) cas()
+            if (!snip) cas() //sentinel node wiill never be marked
             curr = pred.next.getReference
             succ = curr.next.get(marked)
 
