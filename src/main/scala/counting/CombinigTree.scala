@@ -4,6 +4,14 @@ import java.util
 
 import counting.Node.{CStatus, FIRST}
 
+/**
+  * Algorithm can be adapted to apply any commutative function
+  * @param width = size of three >= (numberOfThreads/2)
+  *             ROOT = node(0)
+  *             parent of node[i] is node[(i-1)/2]
+  *             leat i/2 == ThreadId i
+  *
+  */
 
 class CombiningTree(width: Int) {
 
@@ -64,7 +72,8 @@ class Node(var cStatus: CStatus, var locked: Boolean, var parent: Node) {
 
   var firstValue: Int = 0
   var secondValue: Int = 0
-  var oldValue, result: Int = 0
+  var oldValue: Int = 0
+  var result: Int = 0
 
   def this() = this(
     cStatus = Node.ROOT,
@@ -79,6 +88,14 @@ class Node(var cStatus: CStatus, var locked: Boolean, var parent: Node) {
     parent = myParent
   )
 
+  /**
+    *
+    * The precombine() method returns a Boolean indicating whether
+    * the thread was the first to arrive at the node.
+    * If so, the getAndIncrement() method continues moving up the tree.
+    * The stop variable is set to the last node visited,
+    * which is either the last node at which the thread arrived second, or the root.
+    */
   def precombine(): Boolean = synchronized {
     while (locked) wait()
 
@@ -99,6 +116,10 @@ class Node(var cStatus: CStatus, var locked: Boolean, var parent: Node) {
     }
   }
 
+  /**
+    *
+    * thread revisits node and combines its value with values left by other threads
+    */
   def combine(combined: Int): Int = synchronized {
     while (locked) wait() //Wait until node is unlocked
 
@@ -111,6 +132,11 @@ class Node(var cStatus: CStatus, var locked: Boolean, var parent: Node) {
     }
   }
 
+  /**
+    *
+    * after combinig phase
+    * thread examines the node where it stopped at the end of the precombining phase
+    */
   def op(combined: Int): Int = synchronized {
     cStatus match {
       case ROOT => {

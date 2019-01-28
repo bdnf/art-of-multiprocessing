@@ -24,6 +24,11 @@ class Node(var invoc: Invoc, numOfThreads: Int) {
   }
 }
 
+/**
+  * apply() method takes as argument an invocation which describes
+  * the method being called and its arguments, and returns a response,
+  * containing the call’s termination condition (normal or exceptional)
+  */
 trait SeqObject {
   def apply(invoc: Invoc): Response
 

@@ -1,5 +1,6 @@
 package consensus
 //https://stackoverflow.com/questions/16921168/scala-generic-method-no-classtag-available-for-t
+//https://stackoverflow.com/questions/18433515/scala-type-mismatch-underlying-type-and-class-vs-method
 import scala.reflect
 import scala.reflect._
 

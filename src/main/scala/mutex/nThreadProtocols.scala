@@ -6,14 +6,18 @@ trait Lock {
 }
 
 class Filter extends Lock {
-  //creates n-1 waiting rooms that thread traverses to be able to acquire the lock
 
-  //Properties:
-  //At least one thread trying to enter level ` succeeds.
-  //If more than one thread is trying to enter level `, then at least one is blocked
-
-  //first-come-first-served if, whenever, thread A finishes
-  //its doorway before thread B starts its doorway
+  /**
+    * Deadlock-free
+    * creates n-1 waiting rooms that thread traverses to be able to acquire the lock
+    *
+    * Properties:
+    * At least one thread trying to enter level i succeeds.
+    * If more than one thread is trying to enter level , then at least one is blocked
+    *
+    * first-come-first-served if, whenever, thread A finishes
+    * its doorway before thread B starts its doorway
+    */
 
   var level: Array[Int] = Array[Int](0)
   var victim: Array[Int] = Array[Int](0)
@@ -29,7 +33,8 @@ class Filter extends Lock {
 
   override def lock(): Unit = {
     val me = Thread.currentThread.getId.asInstanceOf[Int] % n
-    for (i <- 0 to n) { //Doorway section
+    for (i <- 1 until n) { //Doorway section
+      //CS at level n-1
       //attempt level i
       level(me) = i
       victim(i) = me
@@ -37,8 +42,14 @@ class Filter extends Lock {
       //spin while conflict exists at the same or higher level exist
       //while (( exist(k) != me | level(k) >= i) && (victim(i) == me)) wait()
 
-      while((victim(i) == me)) wait()  //Waiting section
+      while(existThreadOnHigherLevel(i) && (victim(i) == me)) wait()  //Waiting section
     }
+  }
+
+  private def existThreadOnHigherLevel(index: Int): Boolean = {
+
+    for (k <- index until n) if (k !=index && level(k) >= index ) true
+    false
   }
 
   override def unlock(): Unit = {
@@ -48,7 +59,15 @@ class Filter extends Lock {
 }
 
 class BakeryLock extends Lock {
-  //Strictly first-come-first-served
+  /**
+    * Strictly first-come-first-served
+    * flag(i) indicates if Thread waht to enter CS
+    * each thread generates a label which is max+1
+    * to avoid acquiring same label (label(i),i) < (label(j),j) ordering is used
+    * !label numbers are always increasing, may wrap around in future
+    *
+    * The principal drawback is the need to read and write n distinct locations
+    */
   var n: Int = 0
   var flag: Array[Boolean] = Array(false)
   var label: Array[Int]  = Array(0)
@@ -81,8 +100,6 @@ class BakeryLock extends Lock {
     val i = Thread.currentThread.getId.asInstanceOf[Int] % n
     flag(i) = false
   }
-
-  //The principal drawback is the need to read and write n distinct locations
 }
 
 object nThreadProtocols {

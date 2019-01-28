@@ -1,7 +1,14 @@
 package universal_construction
 
 class LockFreeUniversalAlgorithm(numOfThreads: Int) extends SeqObject {
-
+  /**
+    * A thread tries to append its node by proposing as input to a consensus protocol on the head’s decideNext field
+    * When the thread’s node is appended, it sets the node’s sequence number.
+    * To locate head of the log:
+    * head[i] is the last node in the list that thread i has observed.
+    * The head is the node with the
+    * maximum sequence number among the nodes referenced in the head[] array
+    */
 
   var tail: Node = new Node(null, numOfThreads)
   tail.seq = 1

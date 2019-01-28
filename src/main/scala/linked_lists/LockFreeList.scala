@@ -8,7 +8,6 @@ case class NodeMark[T](item: T,
                         )
 
 
-
 class LockFreeList {
   //TODO change for generic type T
 
@@ -47,16 +46,13 @@ class LockFreeList {
       }
       (pred, curr)
     }
-
     findPair
-
-
   }
 
   def add(item: Int): Boolean = {
     println("Adding node")
     val key = item.hashCode
-    if (head.next.getReference != null) {
+
       while (true) { // find predecessor and current entries
 
         val window = find(head, key)
@@ -74,13 +70,6 @@ class LockFreeList {
           }
         }
       }
-    } else {
-      val node = new NodeMark(item, key, new AtomicMarkableReference(head, false))
-
-      if (head.next.compareAndSet(null, node, false, false)) {
-        return true
-      }
-    }
     return false
   }
 
@@ -125,7 +114,8 @@ class LockFreeList {
    val curr = head
    var next = curr.next.getReference
    while(next.key < tail.key){
-     print("Element: ", next.item)
+     if (!next.next.isMarked) print("Element: ", next.item)
+     else print("Element[marked]: ", next.item)
      next = next.next.getReference
    }
   }
@@ -135,9 +125,9 @@ class LockFreeList {
 object LockFreeList extends App {
 
   var list = new LockFreeList
-  val threads = (1 to 10).map(i => {
+  val threads = (1 to 40).map(i => {
     new Thread(() => {
-      if (i%5 == 0) list.remove(scala.util.Random.nextInt(10))
+      if (i%4 == 0) list.remove(scala.util.Random.nextInt(10))
       else list.add(scala.util.Random.nextInt(10))
     })
   })
