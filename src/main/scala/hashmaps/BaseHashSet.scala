@@ -1,0 +1,5 @@
+package hashmaps
+
+trait BaseHashSet {
+
+}
