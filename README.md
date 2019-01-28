@@ -1,5 +1,5 @@
-Implementation of concurrent constructs and data structures
-from [The Art of Multiprocessor Programming by Maurice Herlihy Nir Shavit](https://www.amazon.com/Art-Multiprocessor-Programming-Revised-Reprint/dp/0123973376) in Scala language.
+### Implementation of concurrent constructs and data structures
+#### from [The Art of Multiprocessor Programming by Maurice Herlihy Nir Shavit](https://www.amazon.com/Art-Multiprocessor-Programming-Revised-Reprint/dp/0123973376) in Scala language.
 
 Made during preparation for Module **Consurrent and Distributed Systems**
 ___
